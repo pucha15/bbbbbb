@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinuhaji Musik - Profesional Band & Sound System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f7ff;
+            --secondary: #9d00ff;
+            --dark: #0a0a1a;
+            --light: #e0f7ff;
+            --accent: #ff00c8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, #0d0d2b 100%);
+            color: var(--light);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(157, 0, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 247, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 10%, rgba(255, 0, 200, 0.1) 0%, transparent 40%);
+            z-index: -1;
+        }
+        
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a1a 0%, #0d0d2b 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 1s ease, visibility 1s ease;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .splash-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 247, 255, 0.7);
+            animation: glow 2s infinite alternate;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 100%;
+            line-height: 1.1;
+        }
+        
+        .splash-main-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+        }
+        
+        .splash-sub-title {
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            margin-top: 15px;
+        }
+        
+        .splash-small-title {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            color: rgba(224, 247, 255, 0.7);
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            font-weight: 300;
+            animation: fadeIn 1s ease 0.5s both;
+        }
+        
+        .enter-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+            animation: pulse 2s infinite;
+        }
+        
+        .enter-btn:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: 0 0 30px var(--primary);
+            transform: translateY(-5px);
+            animation: none;
+        }
+        
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 247, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+        
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Navigasi */
+        .nav-container {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+            box-shadow: 0 0 15px var(--primary);
+        }
+        
+        .nav-dot::after {
+            content: attr(data-label);
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 10, 26, 0.8);
+            color: var(--light);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border: 1px solid var(--primary);
+        }
+        
+        .nav-dot:hover::after {
+            opacity: 1;
+        }
+        
+        /* Header/Hero */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 247, 255, 0.05) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 247, 255, 0.5);
+            animation: glow 2s infinite alternate;
+            line-height: 1.1;
+        }
+        
+        .hero-main-title {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+        }
+        
+        .hero-sub-title {
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            margin-top: 15px;
+        }
+        
+        .hero-small-title {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            color: rgba(224, 247, 255, 0.7);
+            text-transform: lowercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+        
+        .hero p {
+            max-width: 800px;
+            margin-bottom: 40px;
+            color: rgba(224, 247, 255, 0.9);
+            font-size: clamp(1rem, 3vw, 1.5rem);
+        }
+        
+        /* Section Styling */
+        section {
+            padding: 100px 20px;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0 20px;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            max-width: 95%;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--primary), transparent);
+        }
+        
+        /* Galeri Konser */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 247, 255, 0.4);
+            animation: none;
+        }
+        
+        .gallery-item:nth-child(2n) {
+            animation-delay: 1s;
+        }
+        
+        .gallery-item:nth-child(3n) {
+            animation-delay: 2s;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 50px rgba(0, 247, 255, 0.5);
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-lightbox:hover {
+            color: var(--accent);
+        }
+        
+        /* Video Konser */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .video-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .video-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(157, 0, 255, 0.4);
+            animation: none;
+        }
+        
+        .video-item:nth-child(2n) {
+            animation-delay: 1.5s;
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: linear-gradient(45deg, var(--dark), #1a0630);
+        }
+        
+        .video-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(0, 247, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .play-btn i {
+            color: var(--dark);
+            font-size: 30px;
+            margin-left: 5px;
+        }
+        
+        .play-btn:hover {
+            background: var(--primary);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .video-info {
+            padding: 15px;
+            background: rgba(20, 10, 40, 0.8);
+        }
+        
+        .video-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        /* Ruang Audio */
+        .audio-room {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(20, 10, 40, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            box-shadow: 0 0 30px rgba(157, 0, 255, 0.3);
+            animation: borderGlow 3s infinite alternate;
+        }
+        
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .equipment-item {
+            background: rgba(10, 5, 25, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 247, 255, 0.2);
+            transition: transform 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .equipment-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 247, 255, 0.3);
+        }
+        
+        .equipment-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .equipment-item h3 {
+            color: var(--light);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .equipment-item p {
+            color: rgba(224, 247, 255, 0.8);
+            font-size: 0.95rem;
+        }
+        
+        .booking-info {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(0, 247, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            animation: pulse 2s infinite;
+        }
+        
+        /* Spectrum Musik */
+        .spectrum-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(20, 10, 40, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            box-shadow: 0 0 30px rgba(157, 0, 255, 0.3);
+        }
+        
+        .spectrum {
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            margin: 40px 0;
+        }
+        
+        .bar {
+            width: 10px;
+            background: linear-gradient(to top, var(--primary), var(--secondary));
+            border-radius: 5px 5px 0 0;
+            transition: height 0.1s ease;
+            box-shadow: 0 0 10px var(--primary);
+        }
+        
+        .spectrum-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .control-btn {
+            background: rgba(10, 5, 25, 0.7);
+            color: var(--light);
+            border: 1px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+        
+        .control-btn:hover {
+            background: var(--primary);
+            color: var(--dark);
+            box-shadow: 0 0 15px var(--primary);
+        }
+        
+        /* Instagram Section */
+        .instagram-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .instagram-title {
+            text-align: center;
+            font-size: 2rem;
+            margin: 30px 0;
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .instagram-feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .instagram-post {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            aspect-ratio: 1/1;
+            transition: transform 0.3s ease;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .instagram-post:hover {
+            transform: translateY(-10px);
+            animation: none;
+        }
+        
+        .instagram-post:nth-child(2n) {
+            animation-delay: 1s;
+        }
+        
+        .instagram-post:nth-child(3n) {
+            animation-delay: 2s;
+        }
+        
+        .instagram-post img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .instagram-post:hover img {
+            transform: scale(1.1);
+        }
+        
+        .instagram-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .instagram-post:hover .instagram-overlay {
+            opacity: 1;
+        }
+        
+        .instagram-overlay h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .instagram-overlay p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        /* Widget Pengunjung */
+        .visitor-widget {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(20, 10, 40, 0.8);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 0.9rem;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        .visitor-count {
+            color: var(--primary);
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* WhatsApp Bubble */
+        .whatsapp-bubble {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 40px;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            animation: pulse 2s infinite, floatVertical 3s ease-in-out infinite;
+        }
+        
+        .whatsapp-bubble:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 0 25px #25D366;
+            animation: none;
+        }
+        
+        /* AI Chatbot */
+        .chatbot-bubble {
+            position: fixed;
+            bottom: 120px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 25px;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: pulse 2s infinite alternate, floatVertical 3s ease-in-out infinite;
+        }
+        
+        .chatbot-bubble:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--accent);
+            animation: none;
+        }
+        
+        .chatbot-container {
+            position: fixed;
+            bottom: 200px;
+            right: 40px;
+            width: 350px;
+            height: 450px;
+            background: rgba(15, 10, 30, 0.95);
+            border-radius: 20px;
+            z-index: 1001;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            animation: borderGlow 3s infinite alternate;
+        }
+        
+        .chatbot-container.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .chatbot-header {
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chatbot-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+        }
+        
+        .chatbot-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .chatbot-close:hover {
+            transform: rotate(90deg);
+            color: var(--primary);
+        }
+        
+        .chatbot-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .chat-message {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .bot-message {
+            background: rgba(0, 247, 255, 0.15);
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .user-message {
+            background: rgba(157, 0, 255, 0.15);
+            border: 1px solid rgba(157, 0, 255, 0.3);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .chatbot-input {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            background: rgba(10, 5, 20, 0.8);
+        }
+        
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 30px;
+            border: 1px solid var(--primary);
+            background: rgba(20, 10, 40, 0.5);
+            color: var(--light);
+            font-family: 'Exo 2', sans-serif;
+        }
+        
+        .chatbot-input button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--dark);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+        
+        /* Footer & Copyright */
+        footer {
+            background: rgba(5, 5, 15, 0.9);
+            padding: 40px 20px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 247, 255, 0.2);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(20, 10, 40, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 247, 255, 0.3);
+        }
+        
+        .social-icon:hover {
+            background: var(--primary);
+            color: var(--dark);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--primary);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        
+        /* Widget Futuristik */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+        
+        .futuristic-widget {
+            background: rgba(20, 10, 40, 0.5);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid rgba(0, 247, 255, 0.3);
+            box-shadow: 0 0 30px rgba(157, 0, 255, 0.3);
+            animation: fadeInUp 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .widget-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .widget-icon {
+            font-size: 28px;
+            color: var(--primary);
+        }
+        
+        .widget-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+        
+        .widget-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Clock Widget */
+        .clock-widget {
+            text-align: center;
+        }
+        
+        .digital-clock {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
+            animation: textGlow 2s infinite alternate;
+        }
+        
+        .date-display {
+            margin-top: 10px;
+            color: rgba(224, 247, 255, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        /* Event Calendar */
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-item {
+            display: flex;
+            gap: 15px;
+            padding: 12px;
+            background: rgba(10, 5, 25, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .event-item:hover {
+            background: rgba(0, 247, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .event-date {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            min-width: 60px;
+        }
+        
+        .event-info h4 {
+            color: var(--light);
+            margin-bottom: 5px;
+        }
+        
+        /* Stats Widget */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-item {
+            background: rgba(10, 5, 25, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            background: rgba(0, 247, 255, 0.1);
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        /* Animasi */
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(0, 247, 255, 0.5); }
+            100% { text-shadow: 0 0 30px rgba(0, 247, 255, 0.8), 0 0 50px rgba(157, 0, 255, 0.6); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 247, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 247, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 247, 255, 0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes floatVertical {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        @keyframes borderGlow {
+            0% { box-shadow: 0 0 10px rgba(0, 247, 255, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(157, 0, 255, 0.8); }
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px rgba(0, 247, 255, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(0, 247, 255, 0.8), 0 0 30px rgba(157, 0, 255, 0.6); }
+        }
+        
+        /* Responsif */
+        @media (max-width: 768px) {
+            .splash-main-title {
+                font-size: 2.8rem;
+            }
+            
+            .splash-sub-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-main-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-sub-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chatbot-container {
+                width: 90%;
+                right: 5%;
+                bottom: 100px;
+            }
+            
+            .whatsapp-bubble {
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
+            }
+            
+            .chatbot-bubble {
+                bottom: 100px;
+                right: 25px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .visitor-widget {
+                bottom: 10px;
+                left: 10px;
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-title">
+            <div class="splash-main-title">SINUHAJI</div>
+            <div class="splash-sub-title">MUSIK</div>
+            <div class="splash-small-title">entertainment</div>
+        </div>
+        <button class="enter-btn" id="enterBtn">LET'S GO</button>
+    </div>
+    
+    <!-- Navigasi Kanan Atas -->
+    <div class="nav-container">
+        <div class="nav-dot active" data-label="Beranda"></div>
+        <div class="nav-dot" data-label="Galeri"></div>
+        <div class="nav-dot" data-label="Video"></div>
+        <div class="nav-dot" data-label="Sound"></div>
+        <div class="nav-dot" data-label="Spectrum"></div>
+        <div class="nav-dot" data-label="Instagram"></div>
+        <div class="nav-dot" data-label="Widget"></div>
+    </div>
+    
+    <!-- Widget Pengunjung -->
+    <div class="visitor-widget">
+        <i class="fas fa-users"></i>
+        Pengunjung: <span class="visitor-count">1248</span>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="beranda">
+        <h1>
+            <div class="hero-main-title">SINUHAJI</div>
+            <div class="hero-sub-title">MUSIK</div>
+            <div class="hero-small-title">entertainment</div>
+        </h1>
+        <p>Membawa pengalaman musik dan hiburan berkualitas tinggi dengan sentuhan teknologi futuristik</p>
+        <div class="particles"></div>
+    </section>
+    
+    <!-- Galeri Konser -->
+    <section id="galeri">
+        <h2 class="section-title">GALERI KONSER</h2>
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Konser 1">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Konser 2">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1464375117522-1311d6a5b81f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Konser 3">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Konser 4">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Konser 5">
+            </div>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1472653431158-6364773b2a56?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Konser 6">
+            </div>
+        </div>
+        
+        <div class="lightbox">
+            <span class="close-lightbox">&times;</span>
+            <div class="lightbox-content">
+                <img src="" alt="Lightbox Image">
+            </div>
+        </div>
+    </section>
+    
+    <!-- Video Konser -->
+    <section id="video">
+        <h2 class="section-title">VIDEO KONSER</h2>
+        <div class="video-grid">
+            <div class="video-item">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Video Konser 1">
+                    <div class="play-btn">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3>Live at Java Jazz Festival 2023</h3>
+                    <p>Penampilan spektakuler dengan teknologi lighting futuristik</p>
+                </div>
+            </div>
+            
+            <div class="video-item">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/tgbNymZ7vqY/maxresdefault.jpg" alt="Video Konser 2">
+                    <div class="play-btn">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3>Summer Festival Tour 2023</h3>
+                    <p>Kolaborasi dengan DJ internasional dan efek visual hologram</p>
+                </div>
+            </div>
+            
+            <div class="video-item">
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg" alt="Video Konser 3">
+                    <div class="play-btn">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3>Neon City Night - Exclusive Show</h3>
+                    <p>Konsep futuristik dengan drone show dan laser mapping</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Ruang Audio -->
+    <section id="sound">
+        <h2 class="section-title">RUANG AUDIO</h2>
+        <div class="audio-room">
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem;">Kami menyediakan peralatan sound system profesional untuk berbagai acara. Berikut beberapa peralatan utama kami:</p>
+            
+            <div class="equipment-grid">
+                <div class="equipment-item">
+                    <div class="equipment-icon">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <h3>Line Array System</h3>
+                    <p>System line array profesional dengan coverage optimal untuk venue besar</p>
+                </div>
+                
+                <div class="equipment-item">
+                    <div class="equipment-icon">
+                        <i class="fas fa-microphone-alt"></i>
+                    </div>
+                    <h3>Microphone Set</h3>
+                    <p>Berbagai jenis mikrofon untuk vokal dan instrumen</p>
+                </div>
+                
+                <div class="equipment-item">
+                    <div class="equipment-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>Mixing Console</h3>
+                    <p>Digital mixer profesional dengan fitur canggih</p>
+                </div>
+                
+                <div class="equipment-item">
+                    <div class="equipment-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <h3>Monitoring System</h3>
+                    <p>In-ear monitoring dan floor monitor berkualitas tinggi</p>
+                </div>
+            </div>
+            
+            <div class="booking-info">
+                <h3>Untuk pemesanan klik bubble WhatsApp di kanan bawah</h3>
+                <p>Kami siap memberikan solusi sound system terbaik untuk acara Anda</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Spectrum Musik -->
+    <section id="spectrum">
+        <h2 class="section-title">SPECTRUM MUSIK INTERAKTIF</h2>
+        <div class="spectrum-container">
+            <div class="spectrum" id="music-spectrum">
+                <!-- Bars will be generated by JavaScript -->
+            </div>
+            <div class="spectrum-controls">
+                <button class="control-btn" id="play-spectrum">MAINKAN</button>
+                <button class="control-btn" id="stop-spectrum">BERHENTI</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Instagram Section -->
+    <section id="instagram">
+        <h2 class="section-title">INSTAGRAM REELS</h2>
+        <div class="instagram-section">
+            <div class="instagram-feed">
+                <div class="instagram-post">
+                    <img src="https://images.unsplash.com/photo-1619983081563-430f63602b6b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Reels 1">
+                    <div class="instagram-overlay">
+                        <h3>Backstage Preparation</h3>
+                        <p>Persiapan sebelum tampil di Java Jazz Festival</p>
+                    </div>
+                </div>
+                
+                <div class="instagram-post">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Reels 2">
+                    <div class="instagram-overlay">
+                        <h3>Soundcheck Session</h3>
+                        <p>Testing sound system untuk acara besar</p>
+                    </div>
+                </div>
+                
+                <div class="instagram-post">
+                    <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Reels 3">
+                    <div class="instagram-overlay">
+                        <h3>Neon City Performance</h3>
+                        <p>Live show dengan efek visual futuristik</p>
+                    </div>
+                </div>
+                
+                <div class="instagram-post">
+                    <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Reels 4">
+                    <div class="instagram-overlay">
+                        <h3>Lighting Effects</h3>
+                        <p>Teknologi pencahayaan terbaru untuk konser</p>
+                    </div>
+                </div>
+                
+                <div class="instagram-post">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Reels 5">
+                    <div class="instagram-overlay">
+                        <h3>Crowd Interaction</h3>
+                        <p>Interaksi dengan penonton di konser besar</p>
+                    </div>
+                </div>
+                
+                <div class="instagram-post">
+                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600" alt="Reels 6">
+                    <div class="instagram-overlay">
+                        <h3>DJ Collaboration</h3>
+                        <p>Kolaborasi dengan DJ internasional</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Widget Futuristik -->
+    <section id="widget">
+        <h2 class="section-title">WIDGET FUTURISTIK</h2>
+        <div class="widget-grid">
+            <div class="futuristic-widget clock-widget">
+                <div class="widget-header">
+                    <div class="widget-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="widget-title">Jam Digital</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="digital-clock" id="digitalClock">00:00:00</div>
+                    <div class="date-display" id="dateDisplay">Senin, 1 Januari 2023</div>
+                </div>
+            </div>
+            
+            <div class="futuristic-widget">
+                <div class="widget-header">
+                    <div class="widget-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="widget-title">Kalender Acara</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="event-list">
+                        <div class="event-item">
+                            <div class="event-date">15 JUL</div>
+                            <div class="event-info">
+                                <h4>Java Jazz Festival</h4>
+                                <p>Jakarta, 19:00 WIB</p>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">22 JUL</div>
+                            <div class="event-info">
+                                <h4>Summer Festival</h4>
+                                <p>Bandung, 20:30 WIB</p>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">05 AGU</div>
+                            <div class="event-info">
+                                <h4>Neon City Tour</h4>
+                                <p>Surabaya, 21:00 WIB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="futuristic-widget">
+                <div class="widget-header">
+                    <div class="widget-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="widget-title">Statistik Band</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">142</div>
+                            <div>Pertunjukan</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div>Kota</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">56k</div>
+                            <div>Pengikut</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24</div>
+                            <div>Anggota</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="futuristic-widget">
+                <div class="widget-header">
+                    <div class="widget-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3 class="widget-title">Musik Terkini</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="music-player">
+                        <div class="now-playing">Neon Dreams - Sinuhaji Band</div>
+                        <div class="progress-container" style="margin: 15px 0; background: rgba(255,255,255,0.1); height: 5px; border-radius: 5px;">
+                            <div class="progress-bar" style="width: 65%; height: 100%; background: var(--primary); border-radius: 5px;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                            <span>1:24</span>
+                            <span>3:45</span>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 20px;">
+                            <button class="control-btn"><i class="fas fa-step-backward"></i></button>
+                            <button class="control-btn"><i class="fas fa-play"></i></button>
+                            <button class="control-btn"><i class="fas fa-step-forward"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- WhatsApp Bubble -->
+    <div class="whatsapp-bubble">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+    
+    <!-- AI Chatbot -->
+    <div class="chatbot-bubble">
+        <i class="fas fa-robot"></i>
+    </div>
+    
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            <h3><i class="fas fa-robot"></i> Sinuhaji AI Assistant</h3>
+            <button class="chatbot-close">&times;</button>
+        </div>
+        <div class="chatbot-body" id="chat-messages">
+            <div class="chat-message bot-message">
+                Halo! Saya Sinuhaji AI Assistant. Ada yang bisa saya bantu terkait band atau peralatan sound system kami?
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chat-input" placeholder="Tulis pesan...">
+            <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 Sinuhaji Musik. Hak Cipta Dilindungi. | Desain oleh Tim Kreatif Sinuhaji
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Splash Screen
+        const splashScreen = document.getElementById('splashScreen');
+        const enterBtn = document.getElementById('enterBtn');
+        
+        enterBtn.addEventListener('click', () => {
+            splashScreen.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Navigasi scroll
+        const navDots = document.querySelectorAll('.nav-dot');
+        const sections = document.querySelectorAll('section');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                
+                if(pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navDots.forEach(dot => {
+                dot.classList.remove('active');
+                if(dot.getAttribute('data-label').toLowerCase() === current) {
+                    dot.classList.add('active');
+                }
+            });
+        });
+        
+        // Navigasi klik
+        navDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const targetId = dot.getAttribute('data-label').toLowerCase();
+                const targetSection = document.getElementById(targetId);
+                
+                if(targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Lightbox Galeri
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const lightbox = document.querySelector('.lightbox');
+        const lightboxImg = document.querySelector('.lightbox-content img');
+        const closeLightbox = document.querySelector('.close-lightbox');
+        
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const imgSrc = item.querySelector('img').src;
+                lightboxImg.src = imgSrc;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeLightbox.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        lightbox.addEventListener('click', (e) => {
+            if(e.target === lightbox) {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Spectrum Musik
+        const spectrumContainer = document.getElementById('music-spectrum');
+        const playBtn = document.getElementById('play-spectrum');
+        const stopBtn = document.getElementById('stop-spectrum');
+        let isPlaying = false;
+        let animationId;
+        
+        // Generate bars
+        for(let i = 0; i < 64; i++) {
+            const bar = document.createElement('div');
+            bar.classList.add('bar');
+            bar.style.height = '5px';
+            spectrumContainer.appendChild(bar);
+        }
+        
+        const bars = document.querySelectorAll('.bar');
+        
+        function animateSpectrum() {
+            bars.forEach(bar => {
+                const height = Math.floor(Math.random() * 150) + 10;
+                bar.style.height = `${height}px`;
+                
+                // Warna gradient berdasarkan tinggi
+                const colorRatio = height / 160;
+                const r = Math.floor(0 + colorRatio * 0);
+                const g = Math.floor(247 + colorRatio * 8);
+                const b = Math.floor(255 - colorRatio * 155);
+                bar.style.background = `linear-gradient(to top, rgb(${r}, ${g}, ${b}), var(--secondary))`;
+            });
+            
+            if(isPlaying) {
+                animationId = requestAnimationFrame(animateSpectrum);
+            }
+        }
+        
+        playBtn.addEventListener('click', () => {
+            if(!isPlaying) {
+                isPlaying = true;
+                animateSpectrum();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i> JEDA';
+            } else {
+                isPlaying = false;
+                cancelAnimationFrame(animationId);
+                playBtn.innerHTML = '<i class="fas fa-play"></i> MAINKAN';
+            }
+        });
+        
+        stopBtn.addEventListener('click', () => {
+            isPlaying = false;
+            cancelAnimationFrame(animationId);
+            playBtn.innerHTML = '<i class="fas fa-play"></i> MAINKAN';
+            
+            bars.forEach(bar => {
+                bar.style.height = '5px';
+            });
+        });
+        
+        // AI Chatbot
+        const chatbotBubble = document.querySelector('.chatbot-bubble');
+        const chatbotContainer = document.querySelector('.chatbot-container');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendMessageBtn = document.getElementById('send-message');
+        const chatbotClose = document.querySelector('.chatbot-close');
+        
+        chatbotBubble.addEventListener('click', () => {
+            chatbotContainer.classList.toggle('active');
+        });
+        
+        chatbotClose.addEventListener('click', () => {
+            chatbotContainer.classList.remove('active');
+        });
+        
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message');
+            messageDiv.classList.add(isUser ? 'user-message' : 'bot-message');
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function getBotResponse(message) {
+            message = message.toLowerCase();
+            
+            if(message.includes('harga') || message.includes('biaya')) {
+                return "Untuk informasi harga paket lengkap, silakan hubungi kami melalui WhatsApp. Kami akan memberikan penawaran terbaik sesuai kebutuhan acara Anda.";
+            } else if(message.includes('alat') || message.includes('sound') || message.includes('peralatan')) {
+                return "Kami menyediakan berbagai peralatan sound system profesional seperti line array, mixer digital, mikrofon, dan monitoring system. Detail peralatan bisa dilihat di bagian Ruang Audio.";
+            } else if(message.includes('konser') || message.includes('acara')) {
+                return "Kami siap mengisi berbagai acara seperti konser, pernikahan, corporate event, dan festival. Silakan beri tahu kami detail acara Anda melalui WhatsApp.";
+            } else if(message.includes('instagram') || message.includes('sosmed')) {
+                return "Anda bisa mengikuti kami di Instagram @sinuhaji.entertainment untuk update terbaru dan video konser kami.";
+            } else if(message.includes('terima kasih') || message.includes('thanks')) {
+                return "Sama-sama! Jika ada pertanyaan lain, jangan ragu untuk bertanya.";
+            } else {
+                return "Maaf, saya belum memahami pertanyaan Anda. Untuk informasi lebih lanjut, silakan hubungi kami melalui WhatsApp atau kunjungi bagian Ruang Audio di website ini.";
+            }
+        }
+        
+        sendMessageBtn.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if(message) {
+                addMessage(message, true);
+                chatInput.value = '';
+                
+                // Simulate bot thinking
+                setTimeout(() => {
+                    const response = getBotResponse(message);
+                    addMessage(response);
+                }, 1000);
+            }
+        });
+        
+        chatInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                sendMessageBtn.click();
+            }
+        });
+        
+        // Video Play Button
+        const playButtons = document.querySelectorAll('.play-btn');
+        playButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('Fitur pemutaran video akan diarahkan ke YouTube atau platform video lainnya.');
+            });
+        });
+        
+        // WhatsApp Bubble
+        const whatsappBubble = document.querySelector('.whatsapp-bubble');
+        whatsappBubble.addEventListener('click', () => {
+            alert('Fitur WhatsApp akan membuka aplikasi WhatsApp untuk menghubungi tim Sinuhaji Entertainment.');
+        });
+        
+        // Visitor counter
+        let visitorCount = 1248;
+        const visitorEl = document.querySelector('.visitor-count');
+        
+        setInterval(() => {
+            visitorCount += Math.floor(Math.random() * 3);
+            visitorEl.textContent = visitorCount;
+        }, 5000);
+        
+        // Digital Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const dayName = days[now.getDay()];
+            const date = now.getDate();
+            const monthName = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            document.getElementById('digitalClock').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('dateDisplay').textContent = `${dayName}, ${date} ${monthName} ${year}`;
+        }
+        
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
